@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import dj_database_url
 from pathlib import Path
-import dj_database_url
 import os
 from dotenv import load_dotenv
 if os.path.exists('.env'):
@@ -24,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@ti_h33^pg)kqa7x8whoeq8+rvz_^+q(^gk-n4tal&*f2n163f'
+SECRET_KEY = os.getenv('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -84,7 +83,7 @@ DATABASES = {
     }
 }
 if "DATABASE_URL" in os.environ:
-    DATABASES['default']=dj_database_url.config(
+    DATABASES['default'] = dj_database_url.config(
         conn_max_age=600, ssl_require=True)
 
 
