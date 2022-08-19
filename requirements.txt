@@ -3,7 +3,7 @@ attrs==22.1.0
 autobahn==22.7.1
 Automat==20.2.0
 autopep8==1.7.0
-certifi @ file:///opt/conda/conda-bld/certifi_1655968806487/work/certifi
+certifi==2022.06.15
 cffi==1.15.1
 constantly==15.1.0
 cryptography==37.0.4
