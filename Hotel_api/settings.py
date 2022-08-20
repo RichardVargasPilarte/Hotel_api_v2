@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from datetime import timedelta
 import dj_database_url
 from pathlib import Path
 import os
@@ -28,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'secret')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".herokuapp.com"]
 
 
 # Application definition
@@ -42,6 +43,37 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic'
 ]
+
+LOCAL_APPS = [
+    'apps.alojamientos',
+    'apps.habitaciones',
+    'apps.usuarios',
+]
+
+THIRD_PARTY_APPS = [
+    # 'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt'
+]
+
+INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
+REST_FRAMEWORK ={
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'id',
+    'django':'django',
+    'ALGORITHM': 'HS512',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=720), # tiempo de valides del token 12 horas
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,10 +110,21 @@ WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'apihotel',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 if "DATABASE_URL" in os.environ:
@@ -128,8 +171,12 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Modelo de usuarios personalizado
+AUTH_USER_MODEL = 'usuarios.Usuarios'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 import django_heroku
