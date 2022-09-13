@@ -24,17 +24,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'secret')
+# SECRET_KEY = os.getenv('SECRET_KEY', 'secret')
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = 'RENDER' not in os.environ # opcion de render
 
 # ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".herokuapp.com"]
+
+DEBUG = 'RENDER' not in os.environ # opcion de render
 
 ALLOWED_HOSTS = []
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
@@ -124,18 +127,15 @@ WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'apihotel',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+    'default': dj_database_url.config(
+            default='sqlite:///db.sqlite3',
+            conn_max_age=600
+    )
+
 }
-if "DATABASE_URL" in os.environ:
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600, ssl_require=True)
+# if "DATABASE_URL" in os.environ:
+#     DATABASES['default'] = dj_database_url.config(
+#         conn_max_age=600, ssl_require=True)
 
 
 # Password validation
@@ -172,9 +172,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -182,11 +182,9 @@ if not DEBUG:
 
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Modelo de usuarios personalizado
 AUTH_USER_MODEL = 'usuarios.Usuarios'
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 import django_heroku
 django_heroku.settings(locals())
