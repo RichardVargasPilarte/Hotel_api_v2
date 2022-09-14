@@ -60,7 +60,7 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    # 'corsheaders',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt'
 ]
@@ -85,6 +85,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,6 +96,10 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+else:    
+    CORS_ORIGIN_WHITELIST = ['localhost:4200'] 
 ROOT_URLCONF = 'Hotel_api.urls'
 
 TEMPLATES = [
