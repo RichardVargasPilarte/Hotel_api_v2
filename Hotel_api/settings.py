@@ -97,9 +97,9 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    CORS_ORIGIN_ALLOW_ALL = True
-else:    
     CORS_ORIGIN_WHITELIST = ['localhost:4200'] 
+else:    
+    CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'Hotel_api.urls'
 
 TEMPLATES = [
