@@ -15,7 +15,7 @@ class Class_query():
 class listado_usuario(APIView, Class_query):
     def get(self, request):
         try:
-            usuarios = Usuarios.objects.filter(eliminado="NO").order_by('id')
+            usuarios = Usuarios.objects.filter(eliminado="NO",id__gte=2).order_by('id')
             serializer = usuariosSerializer(usuarios, many=True)
             return Response(dict(usuario=serializer.data))
         except:

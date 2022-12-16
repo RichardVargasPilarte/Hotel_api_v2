@@ -2,6 +2,12 @@ from django.db import models
 from django.db.models.deletion import PROTECT
 from apps.alojamientos.models import Alojamiento
 
+
+ACTIVO_CHOICES = (
+    ("Disponible","DISPONIBLE"),
+    ("Reservada","RESERVADA"),
+    ("Fuera_de_Servicio","FUERA_DE_SERVICIO")
+)
 # Create your models here.
 class Habitacion(models.Model):
     objects: models.Manager()
@@ -12,6 +18,7 @@ class Habitacion(models.Model):
     estado = models.CharField(max_length=17, default='Disponible')
     eliminado = models.CharField(max_length=2, default='NO')
     nombre_alojamiento = models.ForeignKey(Alojamiento, on_delete=models.PROTECT)
+    activo = models.CharField(choices=ACTIVO_CHOICES, max_length=30,default='Disponible')
 
     class Meta:
         verbose_name = 'Habitacion'
