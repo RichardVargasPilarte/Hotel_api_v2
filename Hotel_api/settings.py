@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
+from pathlib import Path
 from datetime import timedelta
 import dj_database_url
-from pathlib import Path
-import os
 from dotenv import load_dotenv
 if os.path.exists('.env'):
     load_dotenv()
@@ -57,9 +57,13 @@ LOCAL_APPS = [
     'apps.alojamientos',
     'apps.habitaciones',
     'apps.usuarios',
+    'apps.clientes',
+    'apps.reservas',
+    'apps.websocket'
 ]
 
 THIRD_PARTY_APPS = [
+    'channels',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt'
@@ -97,8 +101,8 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    CORS_ORIGIN_WHITELIST = ['http://localhost:4200'] 
-else:    
+    CORS_ORIGIN_WHITELIST = ['http://localhost:4200']
+else:
     CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'Hotel_api.urls'
 
@@ -120,6 +124,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 
+# Channels
+ASGI_APPLICATION = 'Hotel_api.asgi.application'
+
+# Usar Redis como backend de los canales
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6380)],
+        },
+    },
+    'ROUTING': 'chantest.routing.channel_routing',
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -190,6 +207,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Modelo de usuarios personalizado
 AUTH_USER_MODEL = 'usuarios.Usuarios'
-
-import django_heroku
-django_heroku.settings(locals())
