@@ -1,5 +1,10 @@
 from django.db import models
 
+TIPO_IDENTIFICACION_CHOICES = (
+    ("Cedula","CEDULA"),
+    ("Pasaporte","PASAPORTE")
+)
+
 # Create your models here.
 class Cliente(models.Model):
     objects: models.Manager()
@@ -9,6 +14,8 @@ class Cliente(models.Model):
     telefono = models.CharField(max_length=8)
     email = models.CharField(max_length=50)
     eliminado = models.CharField(max_length=2, default='NO')
+    tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION_CHOICES ,max_length=9)
+    identificacion = models.CharField(max_length=30)
     
     class Meta:
         verbose_name = 'Cliente'

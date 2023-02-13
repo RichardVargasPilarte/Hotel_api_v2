@@ -59,7 +59,7 @@ LOCAL_APPS = [
     'apps.usuarios',
     'apps.clientes',
     'apps.reservas',
-    'apps.websocket'
+    # 'apps.websocket'
 ]
 
 THIRD_PARTY_APPS = [
@@ -125,7 +125,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 
 # Channels
-ASGI_APPLICATION = 'Hotel_api.asgi.application'
+# ASGI_APPLICATION = 'Hotel_api.asgi.application'
 
 # Usar Redis como backend de los canales
 CHANNEL_LAYERS = {
