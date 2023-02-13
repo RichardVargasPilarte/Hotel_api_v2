@@ -15,7 +15,7 @@ class Cliente(models.Model):
     email = models.CharField(max_length=50)
     eliminado = models.CharField(max_length=2, default='NO')
     tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION_CHOICES ,max_length=9)
-    identificacion = models.CharField(max_length=30)
+    identificacion = models.CharField(max_length=30, default='Cedula')
     
     class Meta:
         verbose_name = 'Cliente'
