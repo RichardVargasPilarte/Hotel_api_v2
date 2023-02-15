@@ -12,6 +12,6 @@ class clienteSerializer(serializers.ModelSerializer):
                     'telefono',
                     'email',
                     'tipo_identificacion',
-                    'identificacion'
+                    'num_identificacion'
                     'eliminado'
                 )
