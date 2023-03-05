@@ -11,9 +11,10 @@ class reservaSerializer(serializers.ModelSerializer):
                   'fecha_fin',
                   'tipo_pago',
                   'eliminado',
-                  'nombre_cliente',
-                  'nombre_habitacion',
-                  'nombre_usuario'
+                  'cliente',
+                  'habitacion',
+                  'pago_choices',
+                  'num_tarjeta'
                   )
         depth = 1
 
@@ -26,12 +27,13 @@ class reservaSerializerPost(serializers.ModelSerializer):
                   'fecha_fin',
                   'tipo_pago',
                   'eliminado',
-                  'nombre_cliente',
-                  'nombre_habitacion',
-                  'nombre_usuario',
-                  'nombre_cliente_id',
-                  'nombre_habitacion_id',
-                  'nombre_usuario_id',
+                  'cliente',
+                  'habitacion',
+                  'cliente_id',
+                  'habitacion_id',
+                  'pago_choices',
+                  'num_tarjeta',
+                  'descripcion'
                 )
     def create(self, validated_data):
         return Reserva.objects.create(**validated_data)

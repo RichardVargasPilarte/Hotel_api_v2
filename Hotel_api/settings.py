@@ -59,17 +59,18 @@ LOCAL_APPS = [
     'apps.usuarios',
     'apps.clientes',
     'apps.reservas',
-    # 'apps.websocket'
+    'apps.websocket'
 ]
 
 THIRD_PARTY_APPS = [
-    'channels',
+    # 'channels',
+    'daphne',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt'
 ]
 
-INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS+ INSTALLED_APPS + LOCAL_APPS
 
 REST_FRAMEWORK ={
     'DEFAULT_FILTER_BACKENDS': [
@@ -125,7 +126,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 
 # Channels
-# ASGI_APPLICATION = 'Hotel_api.asgi.application'
+ASGI_APPLICATION = 'Hotel_api.asgi.application'
 
 # Usar Redis como backend de los canales
 CHANNEL_LAYERS = {
