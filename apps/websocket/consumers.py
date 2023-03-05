@@ -6,13 +6,13 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class Consumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = 'cambios'
-        self.room_group_name = "chat_%s" % self.room_name
+        self.room_group_name = "cambios"
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         await self.accept()
+        print(f"Added {self.channel_name} channel to cambios")
 
     async def disconnect(self, close_code):
         # Leave room group

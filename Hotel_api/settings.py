@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".herokuapp.com"]
 
-DEBUG = 'RENDER' not in os.environ # opcion de render
+DEBUG = 'RENDER' not in os.environ  # opcion de render
 
 ALLOWED_HOSTS = []
 
@@ -70,9 +70,9 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt'
 ]
 
-INSTALLED_APPS = THIRD_PARTY_APPS+ INSTALLED_APPS + LOCAL_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + INSTALLED_APPS + LOCAL_APPS
 
-REST_FRAMEWORK ={
+REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
@@ -83,9 +83,10 @@ REST_FRAMEWORK ={
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
-    'django':'django',
+    'django': 'django',
     'ALGORITHM': 'HS512',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=720), # tiempo de valides del token 12 horas
+    # tiempo de valides del token 12 horas
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=720),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
@@ -129,15 +130,8 @@ WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 ASGI_APPLICATION = 'Hotel_api.asgi.application'
 
 # Usar Redis como backend de los canales
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('localhost', 6380)],
-        },
-    },
-    'ROUTING': 'chantest.routing.channel_routing',
-}
+CHANNEL_LAYERS = {"default": {
+    "BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -151,8 +145,8 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': dj_database_url.config(
-            default='sqlite:///db.sqlite3',
-            conn_max_age=600
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
     )
 
 }
