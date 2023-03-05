@@ -4,13 +4,12 @@ attrs==22.1.0
 autobahn==22.7.1
 Automat==20.2.0
 autopep8==1.7.0
-# certifi @ file:///C:/Windows/TEMP/abs_e9b7158a-aa56-4a5b-87b6-c00d295b01fanefpc8_o/croots/recipe/certifi_1655968940823/work/certifi
 cffi==1.15.1
 channels==4.0.0
 channels-redis==4.0.0
 constantly==15.1.0
 cryptography==37.0.4
-daphne==3.0.2
+daphne==4.0.0
 dj-database-url==1.0.0
 Django==4.0
 django-cors-headers==3.13.0
@@ -22,6 +21,7 @@ hyperlink==21.0.0
 idna==3.3
 incremental==21.3.0
 msgpack==1.0.4
+mypy-extensions==0.4.3
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
 pyasn1==0.4.8
@@ -39,6 +39,7 @@ six==1.16.0
 sqlparse==0.4.2
 toml==0.10.2
 Twisted==22.4.0
+twisted-iocpsupport==1.0.2
 txaio==22.2.1
 typing_extensions==4.3.0
 tzdata==2022.2
