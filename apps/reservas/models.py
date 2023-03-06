@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from apps.clientes.models import Cliente
 from apps.habitaciones.models import Habitacion
-from apps.usuarios.models import Usuarios
+from apps.usuarios.models import Usuario
 
 PAGO_CHOICES = (
     ("Tarjeta Debito","TARJETA DEBITO"),
@@ -22,7 +22,7 @@ class Reserva(models.Model):
     pago_choices = models.CharField(choices=PAGO_CHOICES, max_length=30,default='Efectivo')
     num_tarjeta = models.CharField(max_length=25, null=True)
     descripcion = models.CharField(max_length=150)
-    # created_by = models.ForeignKey(Usuarios, on_delete=models.PROTECT)
+    # created_by = models.ForeignKey(Usuario, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'Reserva'

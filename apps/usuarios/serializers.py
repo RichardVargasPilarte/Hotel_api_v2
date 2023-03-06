@@ -1,14 +1,14 @@
 import datetime
 from django.db import models
 from rest_framework import serializers
-from .models import Usuarios, Group
+from .models import Usuario, Group
 from django.contrib.auth.models import Group
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class usuariosSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Usuarios
+        model = Usuario
         fields = ('id',
                     'first_name',
                     'last_name',
@@ -38,7 +38,7 @@ class gruposPermissionSerializer(serializers.ModelSerializer):
 class usuariosSerializerPOST(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        usuario = Usuarios(**validated_data)
+        usuario = Usuario(**validated_data)
         usuario.set_password(validated_data['password'])
         usuario.save()
         return usuario
@@ -50,7 +50,7 @@ class usuariosSerializerPOST(serializers.ModelSerializer):
         return act_usuario
 
     class Meta:
-        model = Usuarios
+        model = Usuario
         fields = (  'id',
                     'first_name',
                     'last_name',

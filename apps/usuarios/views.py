@@ -4,18 +4,18 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Usuarios, Group
+from .models import Usuario, Group
 from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 class Class_query():
     def get_queryset(self):
-        return Usuarios.objects.all()
+        return Usuario.objects.all()
 
 class listado_usuario(APIView, Class_query):
     def get(self, request):
         try:
-            usuarios = Usuarios.objects.filter(eliminado="NO",id__gte=2).order_by('id')
+            usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
             serializer = usuariosSerializer(usuarios, many=True)
             return Response(dict(usuario=serializer.data))
         except:
@@ -29,13 +29,13 @@ class listado_usuario(APIView, Class_query):
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
         usuario_saved.groups.add(grupo)
-        return Response(dict(success=f"Usuarios: '{usuario_saved.username}' creado satisfactoriamente".format()))
+        return Response(dict(success=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format()))
 
 class detalle_usuario(APIView, Class_query):
     def get(self, request, pk):
         try:
 
-            usuario = Usuarios.objects.get(id=pk)
+            usuario = Usuario.objects.get(id=pk)
             print(usuario)
             serializer = usuariosSerializer(usuario)
             return Response(dict(usuario=serializer.data))
@@ -44,17 +44,17 @@ class detalle_usuario(APIView, Class_query):
 
     def put(self, request, pk):
         saved_usuario = get_object_or_404(
-            Usuarios.objects.all(), id=pk)
+            Usuario.objects.all(), id=pk)
         usuario = request.data.get('usuario')
         print('llego el usuario: ', usuario)
         serializer = usuariosSerializerPOST(
             instance=saved_usuario, data=usuario, partial=True)
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
-        return Response(dict(success=f"Usuarios '{usuario_saved.username}' actualizado correctamente"))
+        return Response(dict(success=f"Usuario '{usuario_saved.username}' actualizado correctamente"))
 
     def delete(self, request, pk):
-        usuario = get_object_or_404(Usuarios.objects.all(), id=pk)
+        usuario = get_object_or_404(Usuario.objects.all(), id=pk)
         usuario.eliminado = 'SI'
         usuario_saved = usuario.save()
         return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=204)
@@ -84,7 +84,7 @@ class listado_UsuariosPorGrupos(APIView, Class_query):
 
         # muestro los usuarios segun su grupo, pero falta agregar el campo id
         # del grupo en la respuesta
-        grupo_permisos = Usuarios.objects.filter(
+        grupo_permisos = Usuario.objects.filter(
             groups__name__in=['Administrador', 'Supervisor', 'Común']).order_by('id')
         serializer = usuariosSerializer(grupo_permisos, many=True)
         print(grupo_permisos)

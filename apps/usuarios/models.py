@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
 
 # Create your models here.
-class Usuarios(AbstractUser):
+class Usuario(AbstractUser):
     objects: models.Manager()
     direccion = models.CharField(max_length=250)
     estado = models.CharField(max_length=10)

@@ -201,4 +201,4 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Modelo de usuarios personalizado
-AUTH_USER_MODEL = 'usuarios.Usuarios'
+AUTH_USER_MODEL = 'usuarios.Usuario'
