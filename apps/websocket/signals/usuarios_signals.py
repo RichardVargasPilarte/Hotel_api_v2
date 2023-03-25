@@ -6,11 +6,15 @@ from django.forms import model_to_dict
 from apps.websocket.signals import types_dict_convert
 
 from apps.usuarios.models import Usuario
+import json 
+from apps.websocket.signals import types_dict_convert
+
 
 @receiver(post_save, sender=Usuario)
 def announce_new_usuarios(sender, instance, created, **kwargs):
     print(model_to_dict(instance))
     entity = model_to_dict(instance)
+    entity = json.dumps(entity, default=types_dict_convert)
     if created:
         print('se llamo al create')
         channel_layer = get_channel_layer()
