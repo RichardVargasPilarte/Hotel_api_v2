@@ -11,7 +11,7 @@ class ClassQuery():
     def get_queryset(self):
         return Alojamiento.objects.all()
 
-class listado_alojamiento(APIView, ClassQuery):
+class ListadoAlojamiento(APIView, ClassQuery):
 
     # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = [IsAuthenticated]
@@ -34,7 +34,7 @@ class listado_alojamiento(APIView, ClassQuery):
             alojamiento_saved = serializer.save()
         return Response(dict(success=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format()))
 
-class detalle_alojamiento(APIView, ClassQuery):
+class DetalleAlojamiento(APIView, ClassQuery):
 
     # authentication_classes = (JSONWebTokenAuthentication,)
     # permission_classes = (DjangoModelPermissions,)
