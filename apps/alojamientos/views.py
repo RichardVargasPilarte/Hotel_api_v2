@@ -7,11 +7,11 @@ from .models import Alojamiento
 from .serializers import alojamientoSerializer
 
 # Create your views here.
-class Class_query():
+class ClassQuery():
     def get_queryset(self):
         return Alojamiento.objects.all()
 
-class listado_alojamiento(APIView, Class_query):
+class listado_alojamiento(APIView, ClassQuery):
 
     # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = [IsAuthenticated]
@@ -34,7 +34,7 @@ class listado_alojamiento(APIView, Class_query):
             alojamiento_saved = serializer.save()
         return Response(dict(success=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format()))
 
-class detalle_alojamiento(APIView, Class_query):
+class detalle_alojamiento(APIView, ClassQuery):
 
     # authentication_classes = (JSONWebTokenAuthentication,)
     # permission_classes = (DjangoModelPermissions,)
