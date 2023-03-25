@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import listado_habitacion, detalle_habitacion
+from .views import ListadoHabitacion, DetalleHabitacion
 
 app_name = "habitaciones"
 
 urlpatterns = [
-    path('', listado_habitacion.as_view()),
-    path('<int:pk>', detalle_habitacion.as_view())
+    path('', ListadoHabitacion.as_view()),
+    path('<int:pk>', DetalleHabitacion.as_view())
 ]

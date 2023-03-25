@@ -7,11 +7,11 @@ from .models import Habitacion
 from .serializers import habitacionSerializer, habitacionSerializerPOST
 
 # Create your views here.
-class Class_query():
+class ClassQuery():
     def get_queryset(self):
         return Habitacion.objects.all()
 
-class listado_habitacion(APIView, Class_query):
+class ListadoHabitacion(APIView, ClassQuery):
 
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
@@ -33,7 +33,7 @@ class listado_habitacion(APIView, Class_query):
         return Response(dict(success=f"Habitacion: '{habitacion_saved.nombre}' creada satisfactoriamente".format()))
 
 
-class detalle_habitacion(APIView, Class_query):
+class DetalleHabitacion(APIView, ClassQuery):
 
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
