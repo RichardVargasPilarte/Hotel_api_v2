@@ -11,6 +11,7 @@ from apps.reservas.models import Reserva
 def announce_new_Reserva(sender, instance, created, **kwargs):
     print(model_to_dict(instance))
     entity = model_to_dict(instance)
+    entity = json.dumps(entity, default=types_dict_convert)
     if created:
         print('se llamo al create')
         channel_layer = get_channel_layer()

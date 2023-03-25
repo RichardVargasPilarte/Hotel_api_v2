@@ -10,6 +10,7 @@ from apps.clientes.models import Cliente
 @receiver(post_save, sender=Cliente)
     print(model_to_dict(instance))
     entity = model_to_dict(instance)
+    entity = json.dumps(entity, default=types_dict_convert)
 def announce_new_Cliente(sender, instance, created, **kwargs):
     if created:
         print('se llamo al create')
