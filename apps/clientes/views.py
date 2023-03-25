@@ -9,12 +9,12 @@ from .serializers import clienteSerializer
 # Create your views here.
 
 
-class Class_query():
+class ClassQuery():
     def get_queryset(self):
         return Cliente.objects.all()
 
 
-class listado_cliente(APIView, Class_query):
+class listado_cliente(APIView, ClassQuery):
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
 
@@ -35,7 +35,7 @@ class listado_cliente(APIView, Class_query):
         return Response(dict(success=f"Cliente: '{cliente_saved.nombre}' creado satisfactoriamente".format()))
 
 
-class detalle_cliente(APIView, Class_query):
+class detalle_cliente(APIView, ClassQuery):
 
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
