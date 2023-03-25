@@ -8,11 +8,11 @@ from .models import Usuario, Group
 from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-class Class_query():
+class ClassQuery():
     def get_queryset(self):
         return Usuario.objects.all()
 
-class listado_usuario(APIView, Class_query):
+class ListadoUsuario(APIView, ClassQuery):
     def get(self, request):
         try:
             usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
@@ -31,7 +31,7 @@ class listado_usuario(APIView, Class_query):
         usuario_saved.groups.add(grupo)
         return Response(dict(success=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format()))
 
-class detalle_usuario(APIView, Class_query):
+class DetalleUsuario(APIView, ClassQuery):
     def get(self, request, pk):
         try:
 
@@ -59,7 +59,7 @@ class detalle_usuario(APIView, Class_query):
         usuario_saved = usuario.save()
         return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=204)
     
-class listado_grupos(APIView, Class_query):
+class ListadoGrupos(APIView, ClassQuery):
     def get(self, request):
         try:
             # Listo los grupos con sus permisos asignados
@@ -69,7 +69,7 @@ class listado_grupos(APIView, Class_query):
         except:
                 return Response(dict(grupos=[], detail="not found"))
 
-class listado_UsuariosPorGrupos(APIView, Class_query):
+class Listado_UsuariosPorGrupos(APIView, ClassQuery):
     def get(self, request):
         # ----------------------------------------------------------------
         # Obtengo todos los permisos que posee el usuario actual, mediante dos consultas

@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import listado_reserva, detalle_reserva
+from .views import ListadoReserva, DetalleReserva
 
 app_name = 'reservaciones'
 
 urlpatterns = [
-    path('', listado_reserva.as_view()),
-    path('<int:pk>', detalle_reserva.as_view()),
+    path('', ListadoReserva.as_view()),
+    path('<int:pk>', DetalleReserva.as_view()),
 ]

@@ -7,16 +7,16 @@ from .models import Reserva
 from .serializers import reservaSerializer, reservaSerializerPost
 
 # Create your views here.
-class Class_query():
+class ClassQuery():
     def get_queryset(self):
         return Reserva.objects.all()
     
-class listado_reserva(APIView, Class_query):
+class ListadoReserva(APIView, ClassQuery):
     
     permissions = [IsAuthenticated]
     permissions = (DjangoModelPermissions)
     
-    def get(self):
+    def get(self, request):
         try:
             reservaciones = Reserva.objects.filter(eliminado="NO").order_by('id')
             serializers = reservaSerializer(reservaciones, many=True)
@@ -33,12 +33,12 @@ class listado_reserva(APIView, Class_query):
         return Response(dict(success=f"Reserva: '{reservacion_saved.nombre}' creada satisfactoriamente".format()))
     
 
-class detalle_reserva(APIView, Class_query):
+class DetalleReserva(APIView, ClassQuery):
     
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions)
     
-    def get (self ,pk):
+    def get(self ,pk):
         try:
             reservaciones = Reserva.objects.get(id=pk)
             serializer = reservaSerializerPost(reservaciones)

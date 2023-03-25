@@ -14,7 +14,7 @@ class ClassQuery():
         return Cliente.objects.all()
 
 
-class listado_cliente(APIView, ClassQuery):
+class ListadoCliente(APIView, ClassQuery):
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
 
@@ -35,7 +35,7 @@ class listado_cliente(APIView, ClassQuery):
         return Response(dict(success=f"Cliente: '{cliente_saved.nombre}' creado satisfactoriamente".format()))
 
 
-class detalle_cliente(APIView, ClassQuery):
+class DetalleCliente(APIView, ClassQuery):
 
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
