@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from apps.websocket.signals import types_dict_convert
 from django.forms import model_to_dict
 from apps.clientes.models import Cliente
-
+import json 
 
 @receiver(post_save, sender=Cliente)
     print(model_to_dict(instance))
