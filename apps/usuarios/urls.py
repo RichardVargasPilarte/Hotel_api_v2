@@ -6,5 +6,5 @@ urlpatterns = [
     path('', ListadoUsuario.as_view()),
     path('<int:pk>', DetalleUsuario.as_view()),
     path('Grupos/', ListadoGrupos.as_view()),
-    path('UsuariosGrupos', Listado_UsuariosPorGrupos.as_view()),
+    path('UsuariosGrupos/', Listado_UsuariosPorGrupos.as_view()),
 ]
