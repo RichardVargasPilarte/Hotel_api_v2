@@ -7,4 +7,5 @@ urlpatterns = [
     path('<int:pk>', DetalleUsuario.as_view()),
     path('Grupos/', ListadoGrupos.as_view()),
     path('UsuariosGrupos/', Listado_UsuariosPorGrupos.as_view()),
+    path('Permisos/', ListadoPermisos.as_view()),
 ]

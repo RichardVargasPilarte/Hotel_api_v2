@@ -5,8 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario, Group
-from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST
+from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, permisosSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
+from django.db.models import Q
 
 class ClassQuery():
     def get_queryset(self):
@@ -113,3 +115,22 @@ class Listado_UsuariosPorGrupos(APIView, ClassQuery):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+class ClassQueryPermissions():
+    def get_queryset(self):
+        return Permission.objects.all()
+    
+class ListadoPermisos(APIView, ClassQueryPermissions):
+    
+    permission_classes = [IsAuthenticated]
+    permission_classes = (DjangoModelPermissions,)
+    
+    def get(self, request):
+        # try:
+            # Listo los grupos con sus permisos asignados
+            # permisos = Permission.objects.all().order_by('id')
+        permisos = Permission.objects.filter(Q(user=request.user) | Q(group__user=request.user)).all()
+        serializer = permisosSerializer(permisos, many=True)
+        return Response(dict(permisos=serializer.data, userPermission=self.request.user.get_user_permissions()))
+        # except:
+                # return Response(dict(permisos=[], detail="not found"))
