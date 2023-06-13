@@ -6,7 +6,7 @@ from django.forms import model_to_dict
 from apps.websocket.signals import types_dict_convert
 
 from apps.alojamientos.models import Alojamiento
-import json 
+import json
 
 @receiver(post_save, sender=Alojamiento)
 def announce_new_alojamiento(sender, instance, created, **kwargs):

@@ -4,14 +4,15 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from apps.websocket.signals import types_dict_convert
 from django.forms import model_to_dict
+
 from apps.clientes.models import Cliente
-import json 
+import json
 
 @receiver(post_save, sender=Cliente)
+def announce_new_Cliente(sender, instance, created, **kwargs):
     print(model_to_dict(instance))
     entity = model_to_dict(instance)
     entity = json.dumps(entity, default=types_dict_convert)
-def announce_new_Cliente(sender, instance, created, **kwargs):
     if created:
         print('se llamo al create')
         channel_layer = get_channel_layer()

@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from apps.websocket.signals import types_dict_convert
 
 from apps.reservas.models import Reserva
-import json 
+import json
 
 @receiver(post_save, sender=Reserva)
 def announce_new_Reserva(sender, instance, created, **kwargs):
