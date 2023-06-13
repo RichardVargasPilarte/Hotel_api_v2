@@ -22,9 +22,9 @@ class ListadoAlojamiento(APIView, ClassQuery):
             alojamientos = Alojamiento.objects.filter(
                 eliminado="NO").order_by('id')
             serializer = alojamientoSerializer(alojamientos, many=True)
-            return Response(dict(alojamiento=serializer.data))
+            return Response(dict(data=serializer.data, code=200))
         except:
-            return Response(dict(alojamientos=[], detail="not found"))
+            return Response(dict(data=[], detail="not found", code=404))
 
     def post(self, request):
         alojamiento = request.data.get('alojamiento')
@@ -32,7 +32,7 @@ class ListadoAlojamiento(APIView, ClassQuery):
         serializer = alojamientoSerializer(data=alojamiento)
         if serializer.is_valid(raise_exception=True):
             alojamiento_saved = serializer.save()
-        return Response(dict(success=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format()))
+        return Response(dict(message=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format(), code=200))
 
 class DetalleAlojamiento(APIView, ClassQuery):
 
@@ -46,9 +46,9 @@ class DetalleAlojamiento(APIView, ClassQuery):
         try:
             alojamientos = Alojamiento.objects.get(id=pk)
             serializer = alojamientoSerializer(alojamientos)
-            return Response(dict(alojamientos=serializer.data))
+            return Response(dict(alojamientos=serializer.data, code=200))
         except:
-            return Response(dict(alojamientos=[], detail="not found"))
+            return Response(dict(alojamientos=[], detail="not found", code=404))
 
     def put(self, request, pk):
         saved_alojamientos = get_object_or_404(
@@ -59,7 +59,7 @@ class DetalleAlojamiento(APIView, ClassQuery):
             instance=saved_alojamientos, data=alojamientos, partial=True)
         if serializer.is_valid(raise_exception=True):
             alojamiento_saved = serializer.save()
-        return Response(dict(success=f'Alojamiento [{alojamiento_saved.nombre}] actualizado correctamente'))
+        return Response(dict(message=f'Alojamiento [{alojamiento_saved.nombre}] actualizado correctamente', code=200))
 
     def delete(self, request, pk):
         alojamientos = get_object_or_404(Alojamiento.objects.all(), id=pk)
