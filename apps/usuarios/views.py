@@ -15,13 +15,16 @@ class ClassQuery():
         return Usuario.objects.all()
 
 class ListadoUsuario(APIView, ClassQuery):
+    permission_classes = [IsAuthenticated]
+    permission_classes = (DjangoModelPermissions,)
+    
     def get(self, request):
         try:
             usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
             serializer = usuariosSerializer(usuarios, many=True)
-            return Response(dict(usuario=serializer.data))
+            return Response(dict(data=serializer.data, code=200))
         except:
-            return Response(dict(usuario=[], detail="not found"))
+            return Response(dict(data=[], detail="not found", code=404))
 
     def post(self, request):
         usuario = request.data.get('usuario')
@@ -31,18 +34,21 @@ class ListadoUsuario(APIView, ClassQuery):
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
         usuario_saved.groups.add(grupo)
-        return Response(dict(success=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format()))
+        return Response(dict(message=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format(), code=200))
 
 class DetalleUsuario(APIView, ClassQuery):
+    permission_classes = [IsAuthenticated]
+    permission_classes = (DjangoModelPermissions,)
+    
     def get(self, request, pk):
         try:
 
             usuario = Usuario.objects.get(id=pk)
             print(usuario)
             serializer = usuariosSerializer(usuario)
-            return Response(dict(usuario=serializer.data))
+            return Response(dict(usuarios=serializer.data, code=200))
         except:
-            return Response(dict(usuario=[], detail="not found"))
+            return Response(dict(usuarios=[], detail="not found", code=404))
 
     def put(self, request, pk):
         saved_usuario = get_object_or_404(
@@ -53,7 +59,7 @@ class DetalleUsuario(APIView, ClassQuery):
             instance=saved_usuario, data=usuario, partial=True)
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
-        return Response(dict(success=f"Usuario '{usuario_saved.username}' actualizado correctamente"))
+        return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=200))
 
     def delete(self, request, pk):
         usuario = get_object_or_404(Usuario.objects.all(), id=pk)
