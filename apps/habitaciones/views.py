@@ -20,9 +20,9 @@ class ListadoHabitacion(APIView, ClassQuery):
         try:
             habitaciones = Habitacion.objects.filter(eliminado="NO").order_by('id')
             serializer = habitacionSerializer(habitaciones, many=True)
-            return Response(dict(habitacion=serializer.data))
+            return Response(dict(data=serializer.data, code=200))
         except:
-            return Response(dict(habitacion=[], detail="not found"))
+            return Response(dict(data=[], detail="not found", code=404))
     
     def post(self, request):
         habitacion = request.data.get('habitacion')
@@ -30,7 +30,7 @@ class ListadoHabitacion(APIView, ClassQuery):
         serializer = habitacionSerializerPOST(data=habitacion)
         if serializer.is_valid(raise_exception=True):
             habitacion_saved = serializer.save()
-        return Response(dict(success=f"Habitacion: '{habitacion_saved.nombre}' creada satisfactoriamente".format()))
+        return Response(dict(message=f"Habitacion: '{habitacion_saved.nombre}' creada satisfactoriamente".format(), code=200))
 
 
 class DetalleHabitacion(APIView, ClassQuery):
@@ -42,9 +42,9 @@ class DetalleHabitacion(APIView, ClassQuery):
         try:
             habitaciones = Habitacion.objects.get(id=pk)
             serializer = habitacionSerializerPOST(habitaciones)
-            return Response(dict(habitaciones=serializer.data))
+            return Response(dict(habitaciones=serializer.data, code=200))
         except:
-            return Response(dict(habitaciones=[], detail="not found"))
+            return Response(dict(habitaciones=[], detail="not found", code=404))
 
     def put(self, request, pk):
         saved_habitaciones = get_object_or_404(Habitacion.objects.all(), id=pk)
@@ -54,7 +54,7 @@ class DetalleHabitacion(APIView, ClassQuery):
             instance=saved_habitaciones, data=habitaciones, partial=True)
         if serializer.is_valid(raise_exception=True):
             habitacion_saved = serializer.save()
-        return Response(dict(success=f'Habitacion [{habitacion_saved.nombre}] actualizada correctamente'))
+        return Response(dict(message=f'Habitacion [{habitacion_saved.nombre}] actualizada correctamente', code=200))
 
     def delete(self, request, pk):
         habitaciones = get_object_or_404(Habitacion.objects.all(), id=pk)
