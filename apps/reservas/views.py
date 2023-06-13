@@ -20,9 +20,9 @@ class ListadoReserva(APIView, ClassQuery):
         try:
             reservaciones = Reserva.objects.filter(eliminado="NO").order_by('id')
             serializers = reservaSerializer(reservaciones, many=True)
-            return Response(dict(reservacion=serializers.data))
+            return Response(dict(data=serializers.data, code=200))
         except:
-            return Response(dict(reservacion=[], detail="not found"))
+            return Response(dict(data=[], detail="not found", code=404))
         
     def post(self, request):
         reservacion = request.data.get('reservacion')
@@ -30,7 +30,7 @@ class ListadoReserva(APIView, ClassQuery):
         serializers = reservaSerializerPost(data=reservacion)
         if serializers.is_valid(raise_exception=True):
             reservacion_saved = serializers.save()
-        return Response(dict(success=f"Reserva: '{reservacion_saved.nombre}' creada satisfactoriamente".format()))
+        return Response(dict(message=f"Reserva: '{reservacion_saved.nombre}' creada satisfactoriamente".format(), code=200))
     
 
 class DetalleReserva(APIView, ClassQuery):
@@ -42,9 +42,9 @@ class DetalleReserva(APIView, ClassQuery):
         try:
             reservaciones = Reserva.objects.get(id=pk)
             serializer = reservaSerializerPost(reservaciones)
-            return Response(dict(reservaciones=serializer.data))
+            return Response(dict(reservaciones=serializer.data, code=200))
         except:
-            return Response(dict(reservaciones=[], detail="not found"))
+            return Response(dict(reservaciones=[], detail="not found", code=404))
         
     def put(self, request, pk):
         saved_reservaciones = get_object_or_404(Reserva.objects.all(), id=pk)
@@ -53,7 +53,7 @@ class DetalleReserva(APIView, ClassQuery):
         serializer = reservaSerializerPost(instance=saved_reservaciones, data=reservaciones, partial=True)
         if serializer.is_valid(raise_exception=True):
             reservacion_saved = serializer.save()
-        return Response(dict(success=f'Reservacion [{reservacion_saved.nombre}] actualizada correctamente'))
+        return Response(dict(message=f'Reservacion [{reservacion_saved.nombre}] actualizada correctamente', code=200))
     
     def delete(self, pk):
         reservaciones = get_object_or_404(Reserva.objects.all(), id=pk)
