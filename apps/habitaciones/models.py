@@ -17,7 +17,8 @@ class Habitacion(models.Model):
     numero_personas = models.PositiveIntegerField(default=0)
     estado = models.CharField(max_length=17, default='Disponible')
     eliminado = models.CharField(max_length=2, default='NO')
-    nombre_alojamiento = models.ForeignKey(Alojamiento, on_delete=models.PROTECT)
+    # nombre_alojamiento = models.ForeignKey(Alojamiento, on_delete=models.PROTECT)
+    alojamiento_id = models.ForeignKey(Alojamiento, on_delete=models.PROTECT)
     activo = models.CharField(choices=ACTIVO_CHOICES, max_length=30,default='Disponible')
 
     class Meta:
