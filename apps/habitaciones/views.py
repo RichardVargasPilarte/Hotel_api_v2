@@ -30,7 +30,7 @@ class ListadoHabitacion(APIView, ClassQuery):
         serializer = habitacionSerializerPOST(data=habitacion)
         if serializer.is_valid(raise_exception=True):
             habitacion_saved = serializer.save()
-        return Response(dict(message=f"Habitacion: '{habitacion_saved.nombre}' creada satisfactoriamente".format(), code=200))
+        return Response(dict(message=f"Habitacion: '{habitacion_saved.nombre}' creada satisfactoriamente".format(), code=201))
 
 
 class DetalleHabitacion(APIView, ClassQuery):
