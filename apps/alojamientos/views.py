@@ -32,7 +32,7 @@ class ListadoAlojamiento(APIView, ClassQuery):
         serializer = alojamientoSerializer(data=alojamiento)
         if serializer.is_valid(raise_exception=True):
             alojamiento_saved = serializer.save()
-        return Response(dict(message=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format(), code=200))
+        return Response(dict(message=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format(), code=201))
 
 class DetalleAlojamiento(APIView, ClassQuery):
 

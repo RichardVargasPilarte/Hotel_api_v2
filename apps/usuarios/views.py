@@ -34,7 +34,7 @@ class ListadoUsuario(APIView, ClassQuery):
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
         usuario_saved.groups.add(grupo)
-        return Response(dict(message=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format(), code=200))
+        return Response(dict(message=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format(), code=201))
 
 class DetalleUsuario(APIView, ClassQuery):
     permission_classes = [IsAuthenticated]

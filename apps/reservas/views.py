@@ -30,7 +30,7 @@ class ListadoReserva(APIView, ClassQuery):
         serializers = reservaSerializerPost(data=reservacion)
         if serializers.is_valid(raise_exception=True):
             reservacion_saved = serializers.save()
-        return Response(dict(message=f"Reserva: '{reservacion_saved.nombre}' creada satisfactoriamente".format(), code=200))
+        return Response(dict(message=f"Reserva: '{reservacion_saved.id}' creada satisfactoriamente".format(), code=201))
     
 
 class DetalleReserva(APIView, ClassQuery):

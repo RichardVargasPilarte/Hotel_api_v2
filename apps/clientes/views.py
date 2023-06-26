@@ -35,7 +35,7 @@ class ListadoCliente(APIView, ClassQuery):
         return Response(
             dict(
                 message=f"Cliente: '{cliente_saved.nombre}' creado satisfactoriamente".format(),
-                code=200,
+                code=201,
             )
         )
 
