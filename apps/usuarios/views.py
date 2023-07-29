@@ -5,10 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario, Group
-from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, permisosSerializer
+from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, permisosSerializer, cambioContraseñaSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.db.models import Q
+
+from rest_framework import generics
 
 class ClassQuery():
     def get_queryset(self):
@@ -140,3 +142,55 @@ class ListadoPermisos(APIView, ClassQueryPermissions):
         return Response(dict(permisos=serializer.data, userPermission=self.request.user.get_user_permissions()))
         # except:
                 # return Response(dict(permisos=[], detail="not found"))
+                
+
+class CambioContrasena(generics.UpdateAPIView):
+    
+    serializer_class = cambioContraseñaSerializer
+    model = Usuario
+    permission_classes = (IsAuthenticated,)
+    
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+    
+    def put(self, request, pk):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            
+            if self.object.check_password(serializer.data.get("new_password")) & self.object.check_password(serializer.data.get("old_password")):
+                return Response({"new_password": ["La contraseña coincide con la nueva contrasena"]}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Contraena incorrecta"]}, status=status.HTTP_400_BAD_REQUEST)
+            
+
+            
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+            
+            return Response(response)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # saved_password = get_object_or_404(Usuario.objects.all(), id=pk)
+        # usuario = request.data
+        # print("contraseña del usuario:", usuario)
+        # serializer = cambioContraseñaSerializer(
+        #     instance=saved_password, data=usuario, partial=True)
+        # if serializer.is_valid(raise_exception=True):
+        #     usuario_saved = serializer.save()
+        # return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=200))
+        
+        
+        
+        
+        
+        
+        

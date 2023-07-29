@@ -95,3 +95,8 @@ class permisosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
         fields = '__all__'
+        
+
+class cambioContraseñaSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

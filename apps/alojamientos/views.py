@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .models import Alojamiento
 from .serializers import alojamientoSerializer
 
-from Hotel_api.http_responses import HTTPResponse
+from Hotel_api.http_responses import HTTPResponse, HTTPResponseText
 
 # Create your views here.
 class ClassQuery():
@@ -26,23 +26,12 @@ class ListadoAlojamiento(APIView, ClassQuery):
             alojamientos = Alojamiento.objects.filter(
                 eliminado="NO").order_by('id')
             serializer = alojamientoSerializer(alojamientos, many=True)
-            return Response(dict(data=serializer.data, code=HTTPResponse.OK))
+            print(HTTPResponse.OK())
+            return Response(dict(data=serializer.data, code=HTTPResponse.OK()))
         except:
             # status_code = 404
             response = 'Registros no encontrados'  # Default custom message for other errors
-
-            # Handle specific codes differently
-            if specific_condition_1:
-                status_code = HTTPResponse.BAD_REQUEST
-                response = HTTPResponse.get_message(status_code)
-            elif specific_condition_2:
-                status_code = HTTPResponse.UNAUTHORIZED
-                response = HTTPResponse.get_message(status_code)
-            else:
-                status_code = HTTPResponse.INTERNAL_SERVER_ERROR
-                response = HTTPResponse.get_message(status_code)
-
-            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND))
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
             # return Response(dict(data=[], detail="not found", code=status_code))
 
     def post(self, request):
@@ -54,23 +43,11 @@ class ListadoAlojamiento(APIView, ClassQuery):
             serializer = alojamientoSerializer(data=alojamiento)
             if serializer.is_valid(raise_exception=True):
                 alojamiento_saved = serializer.save()
-            return Response(dict(message=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format(), code=HTTPResponse.CREATED))
+            return Response(dict(message=f"Alojamiento: '{alojamiento_saved.nombre}' creada satisfactoriamente".format(), code=HTTPResponse.CREATED()))
         except:
             # status_code = 404
             response = 'Registro no creado'
-            
-            # Handle specific codes differently
-            if specific_condition_1:
-                status_code = HTTPResponse.BAD_REQUEST
-                response = HTTPResponse.get_message(status_code)
-            elif specific_condition_2:
-                status_code = HTTPResponse.UNAUTHORIZED
-                response = HTTPResponse.get_message(status_code)
-            else:
-                status_code = HTTPResponse.INTERNAL_SERVER_ERROR
-                response = HTTPResponse.get_message(status_code)
-
-            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND))
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
 
 
 class DetalleAlojamiento(APIView, ClassQuery):
@@ -87,23 +64,11 @@ class DetalleAlojamiento(APIView, ClassQuery):
             # response = HTTPResponse.get_message(status_code)
             alojamientos = Alojamiento.objects.get(id=pk)
             serializer = alojamientoSerializer(alojamientos)
-            return Response(dict(alojamientos=serializer.data, code=HTTPResponse.OK))
+            return Response(dict(alojamientos=serializer.data, code=HTTPResponse.OK()))
         except:
             # status_code = 404
             response = 'Registro no encontrado'
-            
-            # Handle specific codes differently
-            if specific_condition_1:
-                status_code = HTTPResponse.BAD_REQUEST
-                response = HTTPResponse.get_message(status_code)
-            elif specific_condition_2:
-                status_code = HTTPResponse.UNAUTHORIZED
-                response = HTTPResponse.get_message(status_code)
-            else:
-                status_code = HTTPResponse.INTERNAL_SERVER_ERROR
-                response = HTTPResponse.get_message(status_code)
-
-            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND))
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
 
     def put(self, request, pk):
         try:
@@ -117,47 +82,23 @@ class DetalleAlojamiento(APIView, ClassQuery):
                 instance=saved_alojamientos, data=alojamientos, partial=True)
             if serializer.is_valid(raise_exception=True):
                 alojamiento_saved = serializer.save()
-            return Response(dict(message=f'Alojamiento [{alojamiento_saved.nombre}] actualizado correctamente', code=HTTPResponse.OK))
+            return Response(dict(message=f'Alojamiento [{alojamiento_saved.nombre}] actualizado correctamente', code=HTTPResponse.OK()))
     
         except:
             # status_code = 404
             response = 'Hubo un error al actializar el registro'
-            
-            # Handle specific codes differently
-            if specific_condition_1:
-                status_code = HTTPResponse.BAD_REQUEST
-                response = HTTPResponse.get_message(status_code)
-            elif specific_condition_2:
-                status_code = HTTPResponse.UNAUTHORIZED
-                response = HTTPResponse.get_message(status_code)
-            else:
-                status_code = HTTPResponse.INTERNAL_SERVER_ERROR
-                response = HTTPResponse.get_message(status_code)
-
-            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND))
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
 
     def delete(self, request, pk):
         try:
             # status_code = 204
-            response = HTTPResponse.get_message(status_code)
+            response = HTTPResponseText.OK()
             alojamientos = get_object_or_404(Alojamiento.objects.all(), id=pk)
             alojamientos.eliminado = 'SI'
             alojamiento_saved = alojamientos.save()
-            return Response(dict(message=f'Alojamiento con id `[{pk}]` fue eliminado.'), status=HTTPResponse.NO_CONTENT)
+            return Response(dict(message=f'Alojamiento con id `[{pk}]` fue eliminado.'), status=HTTPResponse.NO_CONTENT())
             
         except:
             # status_code = 404
             response = 'Registro no eliminado'
-
-            # Handle specific codes differently
-            if specific_condition_1:
-                status_code = HTTPResponse.BAD_REQUEST
-                response = HTTPResponse.get_message(status_code)
-            elif specific_condition_2:
-                status_code = HTTPResponse.UNAUTHORIZED
-                response = HTTPResponse.get_message(status_code)
-            else:
-                status_code = HTTPResponse.INTERNAL_SERVER_ERROR
-                response = HTTPResponse.get_message(status_code)
-
-            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND))
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))

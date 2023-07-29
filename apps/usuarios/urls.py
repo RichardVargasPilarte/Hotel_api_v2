@@ -8,4 +8,5 @@ urlpatterns = [
     path('Grupos/', ListadoGrupos.as_view()),
     path('UsuariosGrupos/', Listado_UsuariosPorGrupos.as_view()),
     path('Permisos/', ListadoPermisos.as_view()),
+    path('CambiarContrasena/<int:pk>', CambioContrasena.as_view())
 ]
