@@ -82,6 +82,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['name'] = user.username
         token['groups'] = groups
         token['permissions'] = [p.id for p in permissions]
+        token['email'] = user.email
         # print(token['name'])
         # print(groups)
         # print(permissions)

@@ -5,6 +5,7 @@ from enum import Enum
 class HTTPResponse(Enum):
     _OK = 200
     _CREATED = 201
+    _ACCEPTED = 202
     _NO_CONTENT = 204
     _BAD_REQUEST = 400
     _UNAUTHORIZED = 401
@@ -19,6 +20,10 @@ class HTTPResponse(Enum):
     @staticmethod
     def CREATED():
         return HTTPResponse._CREATED.value
+    
+    @staticmethod
+    def ACCEPTED():
+        return HTTPResponse._ACCEPTED.value
 
     @staticmethod
     def NO_CONTENT():
@@ -45,6 +50,7 @@ from enum import Enum
 class HTTPResponseText(Enum):
     _200 = 'OK'
     _201 = 'Created'
+    _202  = 'Accepted'
     _204 = 'No Content'
     _400 = 'Bad Request'
     _401 = 'Unauthorized'
@@ -59,6 +65,10 @@ class HTTPResponseText(Enum):
 
     @staticmethod
     def CREATED():
+        return HTTPResponseText._201.value
+    
+    @staticmethod
+    def ACCEPTED():
         return HTTPResponseText._201.value
 
     @staticmethod

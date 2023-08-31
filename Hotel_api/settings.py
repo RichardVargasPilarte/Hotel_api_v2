@@ -202,3 +202,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Modelo de usuarios personalizado
 AUTH_USER_MODEL = 'usuarios.Usuario'
+
+# Config SendGrid
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = 465
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
+
+# -------------------------------------------------
+
+# Config Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')

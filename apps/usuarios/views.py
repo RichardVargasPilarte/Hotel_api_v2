@@ -12,6 +12,11 @@ from django.db.models import Q
 
 from rest_framework import generics
 
+from utils.send_email_sendgrid import send_email
+
+from django.core.mail import send_mail
+from django.conf import settings
+
 class ClassQuery():
     def get_queryset(self):
         return Usuario.objects.all()
@@ -67,7 +72,7 @@ class DetalleUsuario(APIView, ClassQuery):
         usuario = get_object_or_404(Usuario.objects.all(), id=pk)
         usuario.eliminado = 'SI'
         usuario_saved = usuario.save()
-        return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=204)
+        return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=status.HTTP_204_NO_CONTENT)
     
 class ListadoGrupos(APIView, ClassQuery):
     def get(self, request):
@@ -154,7 +159,7 @@ class CambioContrasena(generics.UpdateAPIView):
         obj = self.request.user
         return obj
     
-    def put(self, request, pk):
+    def put(self, request):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         
@@ -188,9 +193,46 @@ class CambioContrasena(generics.UpdateAPIView):
         #     usuario_saved = serializer.save()
         # return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=200))
         
+class EnviarCorreos(APIView):
+    
+    # Prueba con SendGrid
+    
+    # def post(self, request, *args, **kwargs):
+    #     subject = request.data.get('subject')
+    #     message = request.data.get('message')
+    #     id = request.data.get('id')
         
+    #     if not subject or not message or not id:
+    #         return Response({'error': 'Datos Incompletos'}, status=status.HTTP_400_BAD_REQUEST)
         
+    #     try:
+    #         user = Usuario.objects.get(id=id)
+    #     except Usuario.DoesNotExist:
+    #         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
+    #     user_email = user.email
         
+        # response_status = send_email(subject, message, user_email )
+        # if response_status == status.HTTP_202_ACCEPTED:
+        #     return Response({'message': 'Correo electrónico enviado correctamente'})
+        # else:
+        #     return Response({'error': 'No se pudo enviar el correo electrónico'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+       
+    # Prueba con Gmail 
+    def post(self, request, *args, **kwargs):
+        id = request.data.get('id')
+        subject = 'Hola, Usuario del sistema'
+        message = 'Este correo es de prueba y procede desde gmail.'
         
+        try:
+            user = Usuario.objects.get(pk=id)
+            recipient_email = user.email
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
+            
+            return Response({'message': 'Correo electrónico enviado correctamente'})
         
+        except Usuario.DoesNotExist:
+            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({'error': 'No se pudo enviar el correo electrónico'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
