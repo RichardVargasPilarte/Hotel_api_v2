@@ -4,13 +4,9 @@ attrs==22.1.0
 autobahn==22.7.1
 Automat==20.2.0
 autopep8==1.7.0
-# black @ file:///C:/ci/black_1660221726201/work
-# certifi @ file:///C:/b/abs_85o_6fm0se/croot/certifi_1671487778835/work/certifi
 cffi==1.15.1
 channels==4.0.0
 channels-redis==4.0.0
-# click @ file:///C:/ci/click_1646056762388/work
-# colorama @ file:///C:/b/abs_a9ozq0l032/croot/colorama_1672387194846/work
 constantly==15.1.0
 cryptography==37.0.4
 daphne==4.0.0
@@ -26,8 +22,6 @@ idna==3.3
 incremental==21.3.0
 msgpack==1.0.4
 mypy-extensions==0.4.3
-# pathspec @ file:///C:/b/abs_9cu5_2yb3i/croot/pathspec_1674681579249/work
-# platformdirs @ file:///C:/b/abs_73cc5cz_1u/croots/recipe/platformdirs_1662711386458/work
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
 pyasn1==0.4.8
@@ -47,9 +41,7 @@ six==1.16.0
 sqlparse==0.4.2
 starkbank-ecdsa==2.2.0
 toml==0.10.2
-# tomli @ file:///C:/Windows/TEMP/abs_ac109f85-a7b3-4b4d-bcfd-52622eceddf0hy332ojo/croots/recipe/tomli_1657175513137/work
 Twisted==22.4.0
-twisted-iocpsupport==1.0.2
 txaio==22.2.1
 typing_extensions==4.3.0
 tzdata==2022.2
