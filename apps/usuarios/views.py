@@ -35,7 +35,7 @@ class ListadoUsuario(APIView, ClassQuery):
 
     def post(self, request):
         usuario = request.data.get('usuario')
-        grupo = usuario.pop('tipo_usuario')
+        grupo = usuario.pop('groups')
         print(grupo)
         serializer = usuariosSerializerPOST(data=usuario)
         if serializer.is_valid(raise_exception=True):
@@ -223,9 +223,10 @@ class EnviarCorreos(APIView):
         id = request.data.get('id')
         subject = 'Hola, Usuario del sistema'
         message = 'Este correo es de prueba y procede desde gmail.'
+        email= request.data.get('email')
         
         try:
-            user = Usuario.objects.get(pk=id)
+            user = Usuario.objects.get(email=email)
             recipient_email = user.email
             send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
             
