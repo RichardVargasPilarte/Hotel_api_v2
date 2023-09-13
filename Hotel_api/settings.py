@@ -67,7 +67,8 @@ THIRD_PARTY_APPS = [
     'daphne',
     'corsheaders',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'django_rest_passwordreset'
 ]
 
 INSTALLED_APPS = THIRD_PARTY_APPS + INSTALLED_APPS + LOCAL_APPS
@@ -111,7 +112,7 @@ ROOT_URLCONF = 'Hotel_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

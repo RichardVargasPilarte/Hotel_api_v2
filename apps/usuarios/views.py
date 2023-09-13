@@ -159,17 +159,17 @@ class CambioContrasena(generics.UpdateAPIView):
         obj = self.request.user
         return obj
     
-    def put(self, request):
+    def put(self, request, pk):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         
         if serializer.is_valid(raise_exception=True):
             
             if self.object.check_password(serializer.data.get("new_password")) & self.object.check_password(serializer.data.get("old_password")):
-                return Response({"new_password": ["La contraseña coincide con la nueva contrasena"]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"new_password": ["La nueva contraseña no debe coincidir con la antigua contrasena"]}, status=status.HTTP_400_BAD_REQUEST)
             
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Contraena incorrecta"]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"old_password": ["Contraseña incorrecta"]}, status=status.HTTP_400_BAD_REQUEST)
             
 
             
@@ -178,21 +178,12 @@ class CambioContrasena(generics.UpdateAPIView):
             response = {
                 'status': 'success',
                 'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
+                'message': 'Contraseña actualizada correctamente',
                 'data': []
             }
             
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # saved_password = get_object_or_404(Usuario.objects.all(), id=pk)
-        # usuario = request.data
-        # print("contraseña del usuario:", usuario)
-        # serializer = cambioContraseñaSerializer(
-        #     instance=saved_password, data=usuario, partial=True)
-        # if serializer.is_valid(raise_exception=True):
-        #     usuario_saved = serializer.save()
-        # return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=200))
-        
 class EnviarCorreos(APIView):
     
     # Prueba con SendGrid
@@ -237,3 +228,52 @@ class EnviarCorreos(APIView):
         
         except Exception as e:
             return Response({'error': 'No se pudo enviar el correo electrónico'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# password reset
+from django.core.mail import EmailMultiAlternatives
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.urls import reverse
+
+from django_rest_passwordreset.signals import reset_password_token_created
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    """
+    Handles password reset tokens
+    When a token is created, an e-mail needs to be sent to the user
+    :param sender: View Class that sent the signal
+    :param instance: View Instance that sent the signal
+    :param reset_password_token: Token Model Object
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    # send an e-mail to the user
+    context = {
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        'reset_password_url': "{}?token={}".format(
+            instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
+            reset_password_token.key),
+        'token':reset_password_token.key
+    }
+
+    # render email text
+    email_html_message = render_to_string('email/user_reset_password.html', context)
+    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    msg = EmailMultiAlternatives(
+        # title:
+        "Restablecimiento de contraseña para {title}".format(title="Sistema Hotel"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
+    msg.attach_alternative(email_html_message, "text/html")
+    msg.send()
