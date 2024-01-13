@@ -10,7 +10,7 @@ class Cliente(models.Model):
     objects: models.Manager()
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    direccion = models.CharField(max_length=250, null=True)
+    direccion = models.CharField(max_length=250, null=True, default=None, blank=True) 
     telefono = models.CharField(max_length=8)
     email = models.CharField(max_length=50, null=True)
     tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION_CHOICES ,max_length=9)
