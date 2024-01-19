@@ -2,6 +2,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.forms import model_to_dict
 from apps.websocket.signals import types_dict_convert
 
 from apps.reservas.models import Reserva
