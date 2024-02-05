@@ -5,14 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario, Group
-from .serializers import MyTokenObtainPairSerializer, gruposPermissionSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, permisosSerializer, cambioContraseñaSerializer
+from .serializers import MyTokenObtainPairSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, usuariosSerializerPUT, permisosSerializer, cambioContraseñaSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.db.models import Q
 
 from rest_framework import generics
-
-from utils.send_email_sendgrid import send_email
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -62,7 +60,7 @@ class DetalleUsuario(APIView, ClassQuery):
             Usuario.objects.all(), id=pk)
         usuario = request.data.get('usuario')
         print('llego el usuario: ', usuario)
-        serializer = usuariosSerializerPOST(
+        serializer = usuariosSerializerPUT(
             instance=saved_usuario, data=usuario, partial=True)
         if serializer.is_valid(raise_exception=True):
             usuario_saved = serializer.save()
@@ -80,9 +78,9 @@ class ListadoGrupos(APIView, ClassQuery):
             # Listo los grupos con sus permisos asignados
             grupos = Group.objects.all().order_by('id')
             serializer = gruposSerializer(grupos, many=True)
-            return Response(dict(grupos=serializer.data))
+            return Response(dict(data=serializer.data))
         except:
-                return Response(dict(grupos=[], detail="not found"))
+                return Response(dict(data=[], detail="not found"))
 
 class Listado_UsuariosPorGrupos(APIView, ClassQuery):
     def get(self, request):
@@ -185,29 +183,6 @@ class CambioContrasena(generics.UpdateAPIView):
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class EnviarCorreos(APIView):
-    
-    # Prueba con SendGrid
-    
-    # def post(self, request, *args, **kwargs):
-    #     subject = request.data.get('subject')
-    #     message = request.data.get('message')
-    #     id = request.data.get('id')
-        
-    #     if not subject or not message or not id:
-    #         return Response({'error': 'Datos Incompletos'}, status=status.HTTP_400_BAD_REQUEST)
-        
-    #     try:
-    #         user = Usuario.objects.get(id=id)
-    #     except Usuario.DoesNotExist:
-    #         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-        
-    #     user_email = user.email
-        
-        # response_status = send_email(subject, message, user_email )
-        # if response_status == status.HTTP_202_ACCEPTED:
-        #     return Response({'message': 'Correo electrónico enviado correctamente'})
-        # else:
-        #     return Response({'error': 'No se pudo enviar el correo electrónico'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
        
     # Prueba con Gmail 
     def post(self, request, *args, **kwargs):

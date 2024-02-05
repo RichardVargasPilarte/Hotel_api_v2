@@ -67,6 +67,37 @@ class usuariosSerializerPOST(serializers.ModelSerializer):
                     'eliminado',
                     'groups',
                 )
+        
+        
+class usuariosSerializerPUT(serializers.ModelSerializer):
+
+    def update(self, instance, validated_data):
+        
+        if 'password' in validated_data:
+            instance.set_password(validated_data.pop('password'))
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Usuario
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'password',
+            'username',
+            'e-mail',
+            'address',
+            'state',
+            'phone',
+            'removed',
+            'groups',
+        )
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
