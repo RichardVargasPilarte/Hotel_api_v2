@@ -6,7 +6,7 @@ urlpatterns = [
     path('', ListadoUsuario.as_view()),
     path('<int:pk>', DetalleUsuario.as_view()),
     path('Grupos/', ListadoGrupos.as_view()),
-    path('UsuariosGrupos/', Listado_UsuariosPorGrupos.as_view()),
+    path('UsuariosGrupos/', ListadoUsuariosPorGrupos.as_view()),
     path('Permisos/', ListadoPermisos.as_view()),
     path('CambiarContrasena/<int:pk>', CambioContrasena.as_view()),
     path('EnviarCorreos/', EnviarCorreos.as_view())
