@@ -4,6 +4,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from Hotel_api.http_responses import HTTPResponse, HTTPResponseText
+
+from django.core.paginator import Paginator
+
 from .models import Usuario, Group
 from .serializers import MyTokenObtainPairSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, usuariosSerializerPUT, permisosSerializer, cambioContraseñaSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -25,29 +29,63 @@ class ListadoUsuario(APIView, ClassQuery):
     
     def get(self, request):
         try:
-            usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
-            serializer = usuariosSerializer(usuarios, many=True)
-            return Response(dict(data=serializer.data, code=200))
+
+            query = request.request_params.get('q')
+
+            if query:
+                usuarios = Usuario.objects.filter(eliminado="NO", id__gte=2, nombre__icontains=query).order_by('id')
+            else:
+                usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
+
+            paginator = Paginator(usuarios, 10)
+            page_number = request.query.get('page')
+            page_obj = paginator.get_page(page_number)
+
+            serializer = usuariosSerializer(page_obj, many=True)
+
+            total_registros = paginator.count
+            total_paginas = paginator.num_pages
+
+            pagina_actual = page_obj.number
+            paginas_disponibles = {
+                'anterior': page_obj.previous_page_number() if page_obj.previous() else None,
+                'siguiente': page_obj.next_page_number() if page_obj.has_next() else None
+            }
+
+            return Response({
+                'data': serializer.data,
+                'total_registros': total_registros,
+                'total_paginas': total_paginas,
+                'pagina_actual': pagina_actual,
+                'paginas_disponibles': paginas_disponibles,
+                'code': HTTPResponse.OK()
+            })
+
+            #  return Response(dict(data=serializer.data, code=200))
         except:
-            return Response(dict(data=[], detail="not found", code=404))
+            response = 'Registros no encontrados'
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
 
     def post(self, request):
-        usuario = request.data.get('usuario')
-        grupo = usuario.pop('groups')
-        print(grupo)
-        serializer = usuariosSerializerPOST(data=usuario)
-        if serializer.is_valid(raise_exception=True):
-            usuario_saved = serializer.save()
-        usuario_saved.groups.add(grupo)
-        return Response(dict(message=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format(), code=201))
-
+        try:
+            usuario = request.data.get('usuario')
+            grupo = usuario.pop('groups')
+            print(grupo)
+            serializer = usuariosSerializerPOST(data=usuario)
+            if serializer.is_valid(raise_exception=True):
+                usuario_saved = serializer.save()
+            usuario_saved.groups.add(grupo)
+            return Response(dict(message=f"Usuario: '{usuario_saved.username}' creado satisfactoriamente".format(), code=HTTPResponse.CREATED()))
+        except:
+            response = 'Registro no creado'
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
+        
 class DetalleUsuario(APIView, ClassQuery):
     permission_classes = [IsAuthenticated]
     permission_classes = (DjangoModelPermissions,)
     
     def get(self, request, pk):
         try:
-
             usuario = Usuario.objects.get(id=pk)
             print(usuario)
             serializer = usuariosSerializer(usuario)
@@ -56,22 +94,32 @@ class DetalleUsuario(APIView, ClassQuery):
             return Response(dict(usuarios=[], detail="not found", code=404))
 
     def put(self, request, pk):
-        saved_usuario = get_object_or_404(
-            Usuario.objects.all(), id=pk)
-        usuario = request.data.get('usuario')
-        print('llego el usuario: ', usuario)
-        serializer = usuariosSerializerPUT(
-            instance=saved_usuario, data=usuario, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            usuario_saved = serializer.save()
-        return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=200))
+        try:
+            saved_usuario = get_object_or_404(
+                Usuario.objects.all(), id=pk)
+            usuario = request.data.get('usuario')
+            print('llego el usuario: ', usuario)
+            serializer = usuariosSerializerPUT(
+                instance=saved_usuario, data=usuario, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                usuario_saved = serializer.save()
+            return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=HTTPResponse.OK()))
+        except:
+            response = 'Hubo un error al actializar el registro'
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
 
     def delete(self, request, pk):
-        usuario = get_object_or_404(Usuario.objects.all(), id=pk)
-        usuario.eliminado = 'SI'
-        usuario_saved = usuario.save()
-        return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=status.HTTP_204_NO_CONTENT)
-    
+        try:
+            response = HTTPResponseText.OK()
+            usuario = get_object_or_404(Usuario.objects.all(), id=pk)
+            usuario.eliminado = 'SI'
+            usuario_saved = usuario.save()
+            return Response(dict(message=f"Usuario con id `{pk}` fue eliminado."), status=HTTPResponse.NO_CONTENT())
+        except:
+            response = 'Registro no eliminado'
+            return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND())) 
+
+
 class ListadoGrupos(APIView, ClassQuery):
     def get(self, request):
         try:
@@ -82,7 +130,7 @@ class ListadoGrupos(APIView, ClassQuery):
         except:
                 return Response(dict(data=[], detail="not found"))
 
-class Listado_UsuariosPorGrupos(APIView, ClassQuery):
+class ListadoUsuariosPorGrupos(APIView, ClassQuery):
     def get(self, request):
         # ----------------------------------------------------------------
         # Obtengo todos los permisos que posee el usuario actual, mediante dos consultas
@@ -158,30 +206,31 @@ class CambioContrasena(generics.UpdateAPIView):
         return obj
     
     def put(self, request, pk):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
+        try:
+            self.object = self.get_object()
+            serializer = self.get_serializer(data=request.data)
+            
+            if serializer.is_valid(raise_exception=True):
+                
+                if self.object.check_password(serializer.data.get("new_password")) & self.object.check_password(serializer.data.get("old_password")):
+                    return Response({"new_password": ["La nueva contraseña no debe coincidir con la antigua contrasena"]}, status=HTTPResponse.BAD_REQUEST())
+                
+                if not self.object.check_password(serializer.data.get("old_password")):
+                    return Response({"old_password": ["Contraseña incorrecta"]}, status=HTTPResponse.BAD_REQUEST())
+                
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.save()
+                response = {
+                    'status': 'success',
+                    'code': HTTPResponse.OK(),
+                    'message': 'Contraseña actualizada correctamente',
+                    'data': []
+                }
+                
+                return Response(response)
+        except:
+            return Response(serializer.errors, status=HTTPResponse.BAD_REQUEST())
         
-        if serializer.is_valid(raise_exception=True):
-            
-            if self.object.check_password(serializer.data.get("new_password")) & self.object.check_password(serializer.data.get("old_password")):
-                return Response({"new_password": ["La nueva contraseña no debe coincidir con la antigua contrasena"]}, status=status.HTTP_400_BAD_REQUEST)
-            
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Contraseña incorrecta"]}, status=status.HTTP_400_BAD_REQUEST)
-            
-
-            
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Contraseña actualizada correctamente',
-                'data': []
-            }
-            
-            return Response(response)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class EnviarCorreos(APIView):
        
     # Prueba con Gmail 
@@ -199,10 +248,10 @@ class EnviarCorreos(APIView):
             return Response({'message': 'Correo electrónico enviado correctamente'})
         
         except Usuario.DoesNotExist:
-            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Usuario no encontrado'}, status=HTTPResponse.NOT_FOUND())
         
         except Exception as e:
-            return Response({'error': 'No se pudo enviar el correo electrónico'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'No se pudo enviar el correo electrónico'}, status=HTTPResponse.INTERNAL_SERVER_ERROR())
 
 # password reset
 from django.core.mail import EmailMultiAlternatives
