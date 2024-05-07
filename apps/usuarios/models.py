@@ -6,7 +6,6 @@ from django.contrib.auth.models import Group
 class Usuario(AbstractUser):
     objects: models.Manager()
     direccion = models.CharField(max_length=250)
-    estado = models.CharField(max_length=10)
     telefono = models.CharField(max_length=9)
     eliminado = models.CharField(max_length=2, default='NO')
 

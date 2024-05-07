@@ -17,7 +17,6 @@ class usuariosSerializer(serializers.ModelSerializer):
                     'username',
                     'email',
                     'direccion',
-                    'estado',
                     'telefono',
                     'eliminado',
                     'groups'
@@ -62,7 +61,6 @@ class usuariosSerializerPOST(serializers.ModelSerializer):
                     'username',
                     'email',
                     'direccion',
-                    'estado',
                     'telefono',
                     'eliminado',
                     'groups',
@@ -90,11 +88,10 @@ class usuariosSerializerPUT(serializers.ModelSerializer):
             'last_name',
             'password',
             'username',
-            'e-mail',
-            'address',
-            'state',
-            'phone',
-            'removed',
+            'email',
+            'direccion',
+            'telefono',
+            'eliminado',
             'groups',
         )
 
