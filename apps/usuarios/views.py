@@ -29,27 +29,27 @@ class ListadoUsuario(APIView, ClassQuery):
     
     def get(self, request):
         try:
-
-            query = request.request_params.get('q')
+            query = request.query_params.get('q')
 
             if query:
-                usuarios = Usuario.objects.filter(eliminado="NO", id__gte=2, nombre__icontains=query).order_by('id')
+                usuarios = Usuario.objects.filter(eliminado="NO", first_name__icontains=query).order_by('id')
             else:
                 usuarios = Usuario.objects.filter(eliminado="NO",id__gte=2).order_by('id')
+            serializer = usuariosSerializer(usuarios, many=True)
 
             paginator = Paginator(usuarios, 10)
-            page_number = request.query.get('page')
+            page_number = request.query_params.get('page')
             page_obj = paginator.get_page(page_number)
 
             serializer = usuariosSerializer(page_obj, many=True)
-
             total_registros = paginator.count
             total_paginas = paginator.num_pages
 
             pagina_actual = page_obj.number
+
             paginas_disponibles = {
-                'anterior': page_obj.previous_page_number() if page_obj.previous() else None,
-                'siguiente': page_obj.next_page_number() if page_obj.has_next() else None
+                'anterior': page_obj.previous_page_number() if page_obj.has_previous() else None,
+                'siguiente': page_obj.next_page_number() if page_obj.has_next() else None,
             }
 
             return Response({
@@ -60,8 +60,7 @@ class ListadoUsuario(APIView, ClassQuery):
                 'paginas_disponibles': paginas_disponibles,
                 'code': HTTPResponse.OK()
             })
-
-            #  return Response(dict(data=serializer.data, code=200))
+            #return Response(dict(data=serializer.data, code=HTTPResponse.OK()))
         except:
             response = 'Registros no encontrados'
             return Response(dict(data=[], detail=response, code=HTTPResponse.NOT_FOUND()))
