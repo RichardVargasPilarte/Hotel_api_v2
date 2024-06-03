@@ -7,7 +7,6 @@ from apps.websocket.signals import types_dict_convert
 
 from apps.usuarios.models import Usuario
 import json 
-from apps.websocket.signals import types_dict_convert
 
 
 @receiver(post_save, sender=Usuario)

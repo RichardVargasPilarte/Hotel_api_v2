@@ -65,20 +65,6 @@ class usuariosSerializerPOST(serializers.ModelSerializer):
                     'eliminado',
                     'groups',
                 )
-        
-        
-class usuariosSerializerPUT(serializers.ModelSerializer):
-
-    def update(self, instance, validated_data):
-        
-        if 'password' in validated_data:
-            instance.set_password(validated_data.pop('password'))
-        
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        
-        instance.save()
-        return instance
 
     class Meta:
         model = Usuario
@@ -86,7 +72,6 @@ class usuariosSerializerPUT(serializers.ModelSerializer):
             'id',
             'first_name',
             'last_name',
-            'password',
             'username',
             'email',
             'direccion',
@@ -110,10 +95,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['name'] = user.username
         token['groups'] = groups
         token['permissions'] = [p.id for p in permissions]
-        # print(token['name'])
-        # print(groups)
+        print(token['name'])
+        print(groups)
         # print(permissions)
-        # print(token)
+        print(token)
         return token
     
     # todas las declaraciones que se realxionan al grupo del usuario son las del error

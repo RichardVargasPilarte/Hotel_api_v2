@@ -9,7 +9,7 @@ from Hotel_api.http_responses import HTTPResponse, HTTPResponseText
 from django.core.paginator import Paginator
 
 from .models import Usuario, Group
-from .serializers import MyTokenObtainPairSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, usuariosSerializerPUT, permisosSerializer, cambioContraseñaSerializer
+from .serializers import MyTokenObtainPairSerializer, usuariosSerializer, gruposSerializer, usuariosSerializerPOST, permisosSerializer, cambioContraseñaSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.db.models import Q
@@ -96,10 +96,10 @@ class DetalleUsuario(APIView, ClassQuery):
         try:
             saved_usuario = get_object_or_404(
                 Usuario.objects.all(), id=pk)
-            usuario = request.data.get('usuario')
-            print('llego el usuario: ', usuario)
-            serializer = usuariosSerializerPUT(
-                instance=saved_usuario, data=usuario, partial=True)
+            usuario_data = request.data.get('usuario')
+            print('llego el usuario: ', usuario_data)
+            serializer = usuariosSerializer(
+                instance=saved_usuario, data=usuario_data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 usuario_saved = serializer.save()
             return Response(dict(message=f"Usuario '{usuario_saved.username}' actualizado correctamente", code=HTTPResponse.OK()))

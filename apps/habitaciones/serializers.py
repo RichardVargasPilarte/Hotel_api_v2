@@ -10,7 +10,8 @@ class habitacionSerializer(serializers.ModelSerializer):
                     'precio',
                     'numero_personas',
                     'eliminado',
-                    'alojamiento_id'
+                    'alojamiento_id',
+                    'estado'
                 )
         depth = 1
 
@@ -24,7 +25,8 @@ class habitacionSerializerPOST(serializers.ModelSerializer):
                     'precio',
                     'numero_personas',
                     'eliminado',
-                    'alojamiento_id'
+                    'alojamiento_id',
+                    'estado'
                 )
     def create(self, validated_data):
         return Habitacion.objects.create(**validated_data)

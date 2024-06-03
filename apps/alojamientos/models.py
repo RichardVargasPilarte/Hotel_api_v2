@@ -4,7 +4,7 @@ from django.db import models
 
 class Alojamiento(models.Model):
     objects: models.Manager()
-    nombre = models.CharField(max_length=25)
+    nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=150)
     tiempo_estadia = models.PositiveIntegerField(default=0)
     eliminado = models.CharField(max_length=2, default='NO')
