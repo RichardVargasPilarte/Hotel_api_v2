@@ -66,20 +66,6 @@ class usuariosSerializerPOST(serializers.ModelSerializer):
                     'groups',
                 )
 
-    class Meta:
-        model = Usuario
-        fields = (
-            'id',
-            'first_name',
-            'last_name',
-            'username',
-            'email',
-            'direccion',
-            'telefono',
-            'eliminado',
-            'groups',
-        )
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
