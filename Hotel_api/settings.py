@@ -131,8 +131,8 @@ WSGI_APPLICATION = 'Hotel_api.wsgi.application'
 ASGI_APPLICATION = 'Hotel_api.asgi.application'
 
 # # Usar Redis como backend de los canales
-CHANNEL_LAYERS = {"default": {
-    "BACKEND": "channels.layers.InMemoryChannelLayer"}}
+#CHANNEL_LAYERS = {"default": {
+#    "BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # Usar Redis como backend de los canales
 # CHANNEL_LAYERS = {
@@ -145,14 +145,14 @@ CHANNEL_LAYERS = {"default": {
 # }
 
 # Usar Redis en Render
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [(os.environ.get('REDIS_HOST'), os.environ.get('REDIS_PORT'))],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(os.environ.get('REDIS_HOST'), os.environ.get('REDIS_PORT'))],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
