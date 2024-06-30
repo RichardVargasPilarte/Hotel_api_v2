@@ -107,7 +107,7 @@ if DEBUG:
     CORS_ORIGIN_WHITELIST = ['http://localhost:4200']
 else:
     CORS_ORIGIN_ALLOW_ALL = False
-    CORS_ORIGIN_WHITELIST = ['hotel-angv2.vercel.app']
+    CORS_ORIGIN_WHITELIST = ['https://hotel-angv2.vercel.app']
 ROOT_URLCONF = 'Hotel_api.urls'
 
 TEMPLATES = [
